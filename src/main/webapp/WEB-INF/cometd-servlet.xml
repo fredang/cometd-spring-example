@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd">
+
+   	<context:component-scan base-package="com.chimpler.example" />
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/*">viewController</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="twitterService" class="com.chimpler.example.TwitterService" />
+
+	<bean id="viewController" class="com.chimpler.example.ViewController">
+	    <property name="twitterService" ref="twitterService" />
+	</bean>
+
+	<bean id="bayeuxServer" class="org.cometd.server.BayeuxServerImpl"
+		init-method="start" destroy-method="stop">
+		<property name="transports">
+			<list>
+			    <!-- web socket transport is not supported when cometd is deployed with tomcat -->
+				<!-- <bean id="websocketTransport" class="org.cometd.websocket.server.WebSocketTransport"> 
+					<constructor-arg ref="bayeuxServer" /> </bean> -->
+				<bean id="jsonTransport" class="org.cometd.server.transport.JSONTransport">
+					<constructor-arg ref="bayeuxServer" />
+				</bean>
+				<bean id="jsonpTransport" class="org.cometd.server.transport.JSONPTransport">
+					<constructor-arg ref="bayeuxServer" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+        <property name="attributes">
+            <map>
+                <entry key="org.cometd.bayeux">
+                    <ref local="bayeuxServer" />
+                </entry>
+            </map>
+        </property> 
+    </bean>	
+</beans>

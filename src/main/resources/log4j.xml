@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+	<appender name="RootConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">			
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} (%c) %p : %m%n"/>
+		</layout>		
+	</appender>
+	<appender name="RootFileAppender"
+		class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="10MB" />
+		<param name="maxBackupIndex" value="10" />
+		<param name="File" value="logs/coconut.log" />
+		<param name="threshold" value="debug"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyy-MM-dd HH:mm:ss.SSS} %p (thread=%t, category=%c, ndc=%x) : %m%n" />
+		</layout>
+	</appender>	
+	<root>
+		<priority value="debug"/>
+		<appender-ref ref="RootFileAppender"/>
+	</root>
+</log4j:configuration>
