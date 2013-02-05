@@ -45,7 +45,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 @javax.inject.Named
 @javax.inject.Singleton
-@Service("generator")
+@Service("twitter")
 public class TwitterService {
 	private final static Logger logger = Logger.getLogger(TwitterService.class.getName());
 	
