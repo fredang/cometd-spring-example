@@ -17,10 +17,14 @@
 		</property>
 	</bean>
 	
-	<bean id="twitterService" class="com.chimpler.example.TwitterService" />
-
+	<bean id="cometTwitterService" class="com.chimpler.example.CometTwitterService" />
+	
+	<bean id="twitterStatusProducer" class="com.chimpler.example.TwitterStatusProducer">
+		<property name="cometTwitterService" ref="cometTwitterService" />    
+	</bean>
+	
 	<bean id="viewController" class="com.chimpler.example.ViewController">
-	    <property name="twitterService" ref="twitterService" />
+	    <property name="twitterStatusProducer" ref="twitterStatusProducer" />
 	</bean>
 
 	<bean id="bayeuxServer" class="org.cometd.server.BayeuxServerImpl"

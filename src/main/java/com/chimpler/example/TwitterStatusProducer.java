@@ -21,17 +21,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-
-import org.cometd.annotation.Configure;
-import org.cometd.annotation.Service;
-import org.cometd.annotation.Session;
-import org.cometd.bayeux.server.BayeuxServer;
-import org.cometd.bayeux.server.ConfigurableServerChannel;
-import org.cometd.bayeux.server.ServerChannel;
-import org.cometd.bayeux.server.ServerSession;
-import org.cometd.server.authorizer.GrantAuthorizer;
-
 import twitter4j.Status;
 import twitter4j.StatusAdapter;
 import twitter4j.TwitterStream;
@@ -39,27 +28,18 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
- * Twitter Service
+ * Comet Twitter Status Producer
  * @author Frederic Dang Ngoc
  */
 
-@javax.inject.Named
-@javax.inject.Singleton
-@Service("twitter")
-public class TwitterService {
-	private final static Logger logger = Logger.getLogger(TwitterService.class.getName());
-	
-	@Inject
-	private BayeuxServer bayeuxServer;
-	@Session
-	private ServerSession serverSession;
-	
-	private TwitterStream twitterStream;
+public class TwitterStatusProducer {
+	private final static Logger logger = Logger.getLogger(TwitterStatusProducer.class.getName());
 
-	@Configure ({"/twitter/samples"})
-	protected void configureTwitterSamples(ConfigurableServerChannel channel) {
-		logger.log(Level.INFO, "Configuring /twitter/samples");
-		channel.addAuthorizer(GrantAuthorizer.GRANT_SUBSCRIBE);
+	private TwitterStream twitterStream;
+	private CometTwitterService cometTwitterService;
+	
+	public void setCometTwitterService(CometTwitterService cometTwitterService) {
+		this.cometTwitterService = cometTwitterService;
 	}
 	
 	public synchronized void startSample(String username, String password) {
@@ -72,27 +52,25 @@ public class TwitterService {
         twitterStream = factory.getInstance();
         twitterStream.addListener(new StatusAdapter() {
 			public void onStatus(Status status) {
-				ServerChannel channel = bayeuxServer.getChannel("/twitter/samples");
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("status", "OK");
 				map.put("createdAt", status.getCreatedAt().toString());
 				map.put("username", status.getUser().getName());
 				map.put("profileImageUrl", status.getUser().getMiniProfileImageURL());
 				map.put("text", status.getText());
-				channel.publish(serverSession, map, "" + status.getId());
+				cometTwitterService.publishMessage(map, Long.toString(status.getId()));
 			}
 
 			@Override
 			public void onException(Exception ex) {
-				ServerChannel channel = bayeuxServer.getChannel("/twitter/samples");
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("status", "ERR");
 				map.put("text", ex.getMessage());
-				channel.publish(serverSession, map, "-1");
+				cometTwitterService.publishMessage(map, "-1");
 				stopSample();
 			}
         });
-		logger.log(Level.INFO, "Listening to twitter sample");
+		logger.log(Level.INFO, "Starting listening to twitter sample");
         twitterStream.sample();
 	}
 	
@@ -100,6 +78,8 @@ public class TwitterService {
 		if (twitterStream == null) {
 			return;
 		}
+
+		logger.log(Level.INFO, "Stopping listening to twitter sample");
 		try {
 			twitterStream.shutdown();
 		} catch (Exception e) {}

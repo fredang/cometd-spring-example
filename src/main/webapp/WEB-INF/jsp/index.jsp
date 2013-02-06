@@ -69,7 +69,8 @@ var tweetCount = 0;
 cometd.addListener('/meta/handshake', function(handshake) {
 	if (handshake.successful === true ) {
 		cometd.batch(function () {
-		startSubscription();
+			startSubscription();
+		});
 	}
 });
 

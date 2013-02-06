@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @Singleton
 public class ViewController {
-	private TwitterService twitterService;
+	private TwitterStatusProducer twitterStatusProducer;
 	
 	public ViewController() {
 		System.out.println("INSTANTIATE VIEWCONTROLLER");
@@ -45,19 +45,19 @@ public class ViewController {
 	@ResponseBody
 	public String startTwitterService(@RequestParam(value="username") String username,
 			@RequestParam(value="password") String password) {
-		twitterService.startSample(username, password);
+		twitterStatusProducer.startSample(username, password);
 		return "OK";
 	}
 
 	@RequestMapping(value="/stopTwitterService", produces="application/text")
 	@ResponseBody
 	public String stopTwitterService() {
-		twitterService.stopSample();
+		twitterStatusProducer.stopSample();
 		return "OK";
 	}
 
-	public void setTwitterService(TwitterService twitterService) {
-		this.twitterService = twitterService;
+	public void setTwitterStatusProducer(TwitterStatusProducer twitterStatusProducer) {
+		this.twitterStatusProducer = twitterStatusProducer;
 	}
 	
 }
