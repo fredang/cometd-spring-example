@@ -32,10 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ViewController {
 	private TwitterStatusProducer twitterStatusProducer;
 	
-	public ViewController() {
-		System.out.println("INSTANTIATE VIEWCONTROLLER");
-	}
-	
 	@RequestMapping(value="/index")
 	public String index() {
 		return "index";
@@ -59,5 +55,4 @@ public class ViewController {
 	public void setTwitterStatusProducer(TwitterStatusProducer twitterStatusProducer) {
 		this.twitterStatusProducer = twitterStatusProducer;
 	}
-	
 }

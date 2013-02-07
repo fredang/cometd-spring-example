@@ -52,6 +52,5 @@ public class CometTwitterService {
 	public void publishMessage(Map<String, Object> msg, String id) {
 		ServerChannel channel = bayeuxServer.getChannel("/twitter/samples");
 		channel.publish(serverSession, msg, id);
-		
 	}
 }
