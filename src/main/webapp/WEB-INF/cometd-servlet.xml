@@ -28,21 +28,7 @@
 	</bean>
 
 	<bean id="bayeuxServer" class="org.cometd.server.BayeuxServerImpl"
-		init-method="start" destroy-method="stop">
-		<property name="transports">
-			<list>
-			    <!-- web socket transport is not supported when cometd is deployed with tomcat -->
-				<!-- <bean id="websocketTransport" class="org.cometd.websocket.server.WebSocketTransport"> 
-					<constructor-arg ref="bayeuxServer" /> </bean> -->
-				<bean id="jsonTransport" class="org.cometd.server.transport.JSONTransport">
-					<constructor-arg ref="bayeuxServer" />
-				</bean>
-				<bean id="jsonpTransport" class="org.cometd.server.transport.JSONPTransport">
-					<constructor-arg ref="bayeuxServer" />
-				</bean>
-			</list>
-		</property>
-	</bean>
+		init-method="start" destroy-method="stop" />
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">

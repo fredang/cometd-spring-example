@@ -58,6 +58,7 @@ function startSubscription() {
 }
 		
 var cometd = $.cometd;
+cometd.registerTransport('websocket', new org.cometd.WebSocketTransport());
 cometd.registerTransport('long-polling', new org.cometd.LongPollingTransport());
 cometd.registerTransport('callback-polling', new org.cometd.CallbackPollingTransport());
 
