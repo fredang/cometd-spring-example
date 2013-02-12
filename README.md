@@ -5,11 +5,19 @@ https://chimpler.wordpress.com/2013/02/11/pushing-real-time-data-to-the-browser-
 This webapp listens to the twitter sample firehose and pushes the status to the web page using cometd.
 
 To deploy the application with jetty:
+<pre>
   mvn jetty:run
-In your browser open the following url: http://localhost:8080/spring/index
+</pre>
+
+In your browser open the following url:
+  http://localhost:8080/spring/index
 
 
 To deploy the application with Tomcat:
+<pre>
   mvn clean install
   cp target/cometd-spring-example-1.0.war <TOMCAT DIR>/webapps/
-Then in your browser open the following URL: http://localhost:8080/cometd-spring-example-1.0/spring/index
+</pre>
+
+Then in your browser open the following URL:
+  http://localhost:8080/cometd-spring-example-1.0/spring/index
