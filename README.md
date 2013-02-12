@@ -1,3 +1,15 @@
 This is a small webapp to show how to use cometd with spring and tomcat.
+It's part of the tutorial 
+https://chimpler.wordpress.com/2013/02/11/pushing-real-time-data-to-the-browser-using-cometd-and-spring/
 
-The webapp listen to the twitter sample firehose and push the status to the web page using cometd.
+This webapp listens to the twitter sample firehose and pushes the status to the web page using cometd.
+
+To deploy the application with jetty:
+  mvn jetty:run
+In your browser open the following url: http://localhost:8080/spring/index
+
+
+To deploy the application with Tomcat:
+  mvn clean install
+  cp target/cometd-spring-example-1.0.war <TOMCAT DIR>/webapps/
+Then in your browser open the following URL: http://localhost:8080/cometd-spring-example-1.0/spring/index
